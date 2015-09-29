@@ -3,7 +3,7 @@
 import subprocess
 import process
 
-def main(args):
+def comp_main(args):
     
     if args.type1 in ["fusionfusion", "star_fusion", "genomon_fusion"] and args.type2 == "genomonSV":
         process.convert_to_bedpe(args.fusion1, args.output + ".fusion1.bedpe", 500000, 10, args.type1)
@@ -44,7 +44,7 @@ def main(args):
     hOUT.close()
 
     # remove intermediate files
-    # subprocess.call(["rm", "-rf", args.output + ".fusion1.bedpe"])
-    # subprocess.call(["rm", "-rf", args.output + ".fusion2.bedpe"])
-    # subprocess.call(["rm", "-rf", args.output + ".fusion_comp.bedpe"])
+    subprocess.call(["rm", "-rf", args.output + ".fusion1.bedpe"])
+    subprocess.call(["rm", "-rf", args.output + ".fusion2.bedpe"])
+    subprocess.call(["rm", "-rf", args.output + ".fusion_comp.bedpe"])
 
