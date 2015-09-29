@@ -57,7 +57,10 @@ def get_position(F, method):
     elif method == "star_fusion":
         chr1, pos1, dir1 = F[4].split(':')
         chr2, pos2, dir2 = F[7].split(':')
-        dir2 = '-' if dir2 == '+' else '-'
+        if dir2 == '+':
+            dir2 = '-'
+        else:
+            dir2 = '+'
     elif method == "genomon_fusion":
         keyMatch = ReReg.match(F[0])
         chr1, dir1, pos1, chr2, dir2, pos2 = keyMatch.group(1), keyMatch.group(2), keyMatch.group(3), keyMatch.group(4), keyMatch.group(5), keyMatch.group(6)
