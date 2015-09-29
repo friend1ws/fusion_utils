@@ -14,21 +14,7 @@ def convert_to_bedpe(input_file, output_file, margin_major, margin_minor, method
     for line in hIN:
         F = line.rstrip('\n').split('\t')
 
-        if method == "star_fusion" and F[0] == "#fusion_name": continue
-
-        if method in ["fusionfusion", "genomonSV"]:
-            chr1, pos1, dir1, chr2, pos2, dir2 = F[0], F[1], F[2], F[3], F[4], F[5]
-        elif method == "star_fusion":
-            chr1, pos1, dir1 = F[4].split(':')
-            chr2, pos2, dir2 = F[7].split(':')
-            dir2 = '-' if dir2 == '+' else '-'
-        elif method == "genomon_fusion":
-            keyMatch = ReReg.match(F[0])
-            chr1, dir1, pos1, chr2, dir2, pos2 = keyMatch.group(1), keyMatch.group(2), keyMatch.group(3), keyMatch.group(4), keyMatch.group(5), keyMatch.group(6)
-
-        if chr1 > chr2 or chr1 == chr2 and int(pos1) > int(pos2):
-            chr1, chr2, pos1, pos2, dir1, dir2 = chr2, chr1, pos2, pos1, dir2, dir1
-
+        chr1, pos1, dir1, chr2, pos2, dir2 = get_position(F, method)
         start1, end1, start2, end2 = pos1, pos1, pos2, pos2
         ID = chr1 + ':' + dir1 + pos1 + '-' + chr2 + ':' + dir2 + pos2
 
@@ -63,4 +49,21 @@ def convert_to_bedpe(input_file, output_file, margin_major, margin_minor, method
     hIN.close()
     hOUT.close()
 
+
+def get_position(F, method):
+
+    if method in ["fusionfusion", "genomonSV"]:
+        chr1, pos1, dir1, chr2, pos2, dir2 = F[0], F[1], F[2], F[3], F[4], F[5]
+    elif method == "star_fusion":
+        chr1, pos1, dir1 = F[4].split(':')
+        chr2, pos2, dir2 = F[7].split(':')
+        dir2 = '-' if dir2 == '+' else '-'
+    elif method == "genomon_fusion":
+        keyMatch = ReReg.match(F[0])
+        chr1, dir1, pos1, chr2, dir2, pos2 = keyMatch.group(1), keyMatch.group(2), keyMatch.group(3), keyMatch.group(4), keyMatch.group(5), keyMatch.group(6)
+
+    if chr1 > chr2 or chr1 == chr2 and int(pos1) > int(pos2):
+        chr1, chr2, pos1, pos2, dir1, dir2 = chr2, chr1, pos2, pos1, dir2, dir1
+
+    return [chr1, pos1, dir1, chr2, pos2, dir2]
 

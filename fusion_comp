@@ -19,10 +19,10 @@ parser.add_argument("fusion2", metavar = "fusion2.txt", default = None, type = s
 parser.add_argument("type2", choices=["fusionfusion", "genomonSV", "star_fusion", "genomon_fusion"], default = "fusionfusion",
                     help = "the type of the 2nd fusion")
 
-parser.add_argument("output", metavar = "output.txt", default = None, type = str, required=True,
+parser.add_argument("output", metavar = "output.txt", default = None, type = str,
                     help = "the path to the output")
 
-parser.add_argument("bedtools_path", metavar = "bedtools_path", type = str, required=True,
+parser.add_argument("bedtools_path", metavar = "bedtools_path", type = str, 
                     help = "the path to the bedtools")
 
 args = parser.parse_args()
