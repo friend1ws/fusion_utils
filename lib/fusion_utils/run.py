@@ -2,6 +2,7 @@
 
 import subprocess
 import process
+import filter
 
 def comp_main(args):
     
@@ -47,4 +48,17 @@ def comp_main(args):
     subprocess.call(["rm", "-rf", args.output + ".fusion1.bedpe"])
     subprocess.call(["rm", "-rf", args.output + ".fusion2.bedpe"])
     subprocess.call(["rm", "-rf", args.output + ".fusion_comp.bedpe"])
+
+
+def filt_main(args):
+
+    if args.type == "fusionfusion":
+        filter.filter_fusionfusion(args.fusion, args.output, args.thres)
+    elif args.type == "genomon_fusion":
+        filter.filter_genomon_fusion(args.fusion, args.output, args.thres)
+    elif args.type == "star_fusion":
+        filter.filter_star_fusion(args.fusion, args.output, args.thres)
+    else:
+        raise ValueError("the input type should be fusionfusion, genomon_fusion or star_fusion")
+
 

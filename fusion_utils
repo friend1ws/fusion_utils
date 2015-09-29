@@ -35,6 +35,25 @@ comp_parser.add_argument("bedtools_path", metavar = "bedtools_path", type = str,
 comp_parser.set_defaults(func = comp_main)
 ##########
 
+##########
+# filt
+filt_parser = subparsers.add_parser("filt",
+                                   help = "filtering gene fusion results")
+
+filt_parser.add_argument("fusion", metavar = "fusion.txt", default = None, type = str,
+                         help = "the path to the fusion result")
+
+filt_parser.add_argument("type", choices=["fusionfusion", "star_fusion", "genomon_fusion"], default = "fusionfusion",
+                         help = "the type of the fusion result")
+
+filt_parser.add_argument("output", metavar = "output.txt", default = None, type = str,
+                         help = "the path to the output")
+
+filt_parser.add_argument("--thres", metavar = "threshould", default = 3, type = int,
+                           help = "the threshould for the support read")
+
+filt_parser.set_defaults(func = filt_main)
+##########
 args = parser.parse_args()
 
 args.func(args)   
