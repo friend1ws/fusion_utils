@@ -1,10 +1,15 @@
 #! /usr/bin/env python
 
-import subprocess
+import os, subprocess
 import process
 import filter
 
 def comp_main(args):
+
+    if os.path.getsize(args.fusion1) == 0:
+        hOUT = open(args.output, 'w')
+        hOUT.close()
+        return
     
     if args.type1 in ["fusionfusion", "star_fusion", "genomon_fusion"] and args.type2 == "genomonSV":
         process.convert_to_bedpe(args.fusion1, args.output + ".fusion1.bedpe", 500000, 10, args.type1)
