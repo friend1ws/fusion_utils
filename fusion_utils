@@ -36,6 +36,27 @@ comp_parser.set_defaults(func = comp_main)
 ##########
 
 ##########
+# rmdup 
+rmdup_parser = subparsers.add_parser("rmdup",
+                                    help = "remove putative duplicated gene fusion and structural variation results")
+
+rmdup_parser.add_argument("fusion", metavar = "fusion.txt", default = None, type = str,
+                    help = "the path to the fusion result")
+
+rmdup_parser.add_argument("type", choices=["fusionfusion", "genomonSV", "star_fusion", "genomon_fusion"], default = "fusionfusion",
+                    help = "the type of the fusion result")
+
+rmdup_parser.add_argument("output", metavar = "output.txt", default = None, type = str,
+                    help = "the path to the output")
+
+rmdup_parser.add_argument("bedtools_path", metavar = "bedtools_path", type = str,
+                    help = "the path to the bedtools")
+
+rmdup_parser.set_defaults(func = rmdup_main)
+##########
+
+
+##########
 # filt
 filt_parser = subparsers.add_parser("filt",
                                    help = "filtering gene fusion results")

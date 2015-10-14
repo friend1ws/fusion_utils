@@ -55,6 +55,50 @@ def comp_main(args):
     subprocess.call(["rm", "-rf", args.output + ".fusion_comp.bedpe"])
 
 
+def rmdup_main(args):
+
+    if os.path.getsize(args.fusion) == 0:
+        hOUT = open(args.output, 'w')
+        hOUT.close()
+        return
+
+    process.convert_to_bedpe(args.fusion, args.output + ".fusion.bedpe", 10, 10, args.type)
+
+    hOUT = open(args.output + ".fusion_comp.bedpe", 'w')
+    subprocess.call([args.bedtools_path + "/bedtools", "pairtopair", "-a", args.output + ".fusion.bedpe", "-b", args.output + ".fusion.bedpe"], stdout = hOUT)
+    hOUT.close()
+
+    # create dictionary
+    fusion_comp = {}
+    hIN = open(args.output + ".fusion_comp.bedpe", 'r')
+    for line in hIN:
+        F = line.rstrip('\n').split('\t')
+        if F[6] != F[16]:
+            if int(F[7]) < int(F[17]) or (int(F[7]) == int(F[17]) and F[6] not in fusion_comp):
+                fusion_comp[F[6]] = F[16]
+
+    hIN.close()
+
+    hIN = open(args.fusion, 'r')
+    hOUT = open(args.output, 'w')
+    for line in hIN:
+        F = line.rstrip('\n').split('\t')
+        chr1, pos1, dir1, chr2, pos2, dir2 = process.get_position(F, args.type)
+        ID = chr1 + ':' + dir1 + pos1 + '-' + chr2 + ':' + dir2 + pos2
+
+        if ID not in fusion_comp:
+            print >> hOUT, '\t'.join(F)
+
+
+    hIN.close()
+    hOUT.close()
+
+    # remove intermediate files
+    subprocess.call(["rm", "-rf", args.output + ".fusion.bedpe"])
+    subprocess.call(["rm", "-rf", args.output + ".fusion_comp.bedpe"])
+
+
+
 def filt_main(args):
 
     if args.type == "fusionfusion":
