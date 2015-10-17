@@ -7,7 +7,7 @@ def filter_star_fusion(input_file, output_file, thres):
     for line in hIN:
         F = line.rstrip('\n').split('\t')
         if F[0] == "#fusion_name":
-            print '\t'.join(F)
+            print >> hOUT, '\t'.join(F)
             continue 
 
         if int(F[1]) < int(thres): continue
