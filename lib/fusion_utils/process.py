@@ -6,8 +6,8 @@ ReReg = re.compile(r'([^ \t\n\r\f\v,]+):([\+\-])(\d+)\-([^ \t\n\r\f\v,]+):([\+\-
 
 def convert_to_bedpe(input_file, output_file, margin_major, margin_minor, method):
 
-    if method not in ["fusionfusion", "genomonSV", "star_fusion", "genomon_fusion"]:
-        raise ValueError("the argument method should be fusionfusion, genomonSV, star_fusion")
+    if method not in ["fusionfusion", "genomonSV", "star_fusion", "genomon_fusion", "mapsplice2", "tophat_fusion"]:
+        raise ValueError("the argument method should be fusionfusion, genomonSV, star_fusion, genomon_fusion, mapsplice2, tophat_fusion")
 
     hIN = open(input_file, 'r')
     hOUT = open(output_file, 'w')
@@ -29,6 +29,10 @@ def convert_to_bedpe(input_file, output_file, margin_major, margin_minor, method
             read_num = F[1]
         elif method == "genomon_fusion":
             read_num = F[20]
+        elif method == "mapsplice2":
+            read_num = F[4]
+        elif method == "tophat_fusion":
+            read_num = F[6]
 
         if dir1 == '+':
             start1 = str(int(start1) - int(margin_minor))
@@ -52,19 +56,20 @@ def convert_to_bedpe(input_file, output_file, margin_major, margin_minor, method
 
 def get_position(F, method):
 
-    if method in ["fusionfusion", "genomonSV"]:
+    if method in ["fusionfusion", "genomonSV", "tophat_fusion"]:
         chr1, pos1, dir1, chr2, pos2, dir2 = F[0], F[1], F[2], F[3], F[4], F[5]
     elif method == "star_fusion":
         chr1, pos1, dir1 = F[4].split(':')
-        chr2, pos2, dir2 = F[7].split(':')
-        if dir2 == '+':
-            dir2 = '-'
-        else:
-            dir2 = '+'
+        chr2, pos2, dir2_flip = F[7].split(':')
+        dir2 = '+' if dir2_flip == '-' else '-'
     elif method == "genomon_fusion":
         keyMatch = ReReg.match(F[0])
         chr1, dir1, pos1, chr2, dir2, pos2 = keyMatch.group(1), keyMatch.group(2), keyMatch.group(3), keyMatch.group(4), keyMatch.group(5), keyMatch.group(6)
-
+    elif method == "mapsplice2":
+        chr1, chr2 = F[0].split('~')
+        pos1, pos2 = F[1], F[2]
+        dir1, dir2 = F[5][0], '+' if F[5][1] == '-' else '-'
+    
     if chr1 > chr2 or chr1 == chr2 and int(pos1) > int(pos2):
         chr1, chr2, pos1, pos2, dir1, dir2 = chr2, chr1, pos2, pos1, dir2, dir1
 

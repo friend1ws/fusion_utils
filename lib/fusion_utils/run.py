@@ -11,10 +11,10 @@ def comp_main(args):
         hOUT.close()
         return
     
-    if args.type1 in ["fusionfusion", "star_fusion", "genomon_fusion"] and args.type2 == "genomonSV":
+    if args.type1 in ["fusionfusion", "star_fusion", "genomon_fusion", "mapsplice2", "tophat_fusion"] and args.type2 == "genomonSV":
         process.convert_to_bedpe(args.fusion1, args.output + ".fusion1.bedpe", 500000, 10, args.type1)
         process.convert_to_bedpe(args.fusion2, args.output + ".fusion2.bedpe", 10, 10, "genomonSV")
-    elif args.type2 in ["fusionfusion", "star_fusion", "genomon_fusion"] and args.type1 == "genomonSV":
+    elif args.type2 in ["fusionfusion", "star_fusion", "genomon_fusion", "mapsplice2", "tophat_fusion"] and args.type1 == "genomonSV":
         process.convert_to_bedpe(args.fusion1, args.output + ".fusion1.bedpe", 10, 10, "genomonSV")
         process.convert_to_bedpe(args.fusion2, args.output + ".fusion2.bedpe", 500000, 10, args.type2)
     else:

@@ -17,14 +17,14 @@ comp_parser = subparsers.add_parser("comp",
 comp_parser.add_argument("fusion1", metavar = "fusion1.txt", default = None, type = str,
                     help = "the path to the 1st fusion")
 
-comp_parser.add_argument("type1", choices=["fusionfusion", "genomonSV", "star_fusion", "genomon_fusion"], default = "fusionfusion",
-                    help = "the type of the 1st fusion")
+comp_parser.add_argument("type1", choices=["fusionfusion", "genomonSV", "star_fusion", "genomon_fusion", "mapsplice2", "tophat_fusion"], 
+                    default = "fusionfusion", help = "the type of the 1st fusion")
 
 comp_parser.add_argument("fusion2", metavar = "fusion2.txt", default = None, type = str,
                     help = "the path to the 2nd fusion")
 
-comp_parser.add_argument("type2", choices=["fusionfusion", "genomonSV", "star_fusion", "genomon_fusion"], default = "fusionfusion",
-                    help = "the type of the 2nd fusion")
+comp_parser.add_argument("type2", choices=["fusionfusion", "genomonSV", "star_fusion", "genomon_fusion", "mapsplice2", "tophat_fusion"],
+                    default = "fusionfusion", help = "the type of the 2nd fusion")
 
 comp_parser.add_argument("output", metavar = "output.txt", default = None, type = str,
                     help = "the path to the output")
