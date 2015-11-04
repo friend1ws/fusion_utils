@@ -81,4 +81,4 @@ def get_read_num(F, method):
     elif method == "tophat_fusion":
         read_num = F[6]
 
-    return read_num
+    return int(read_num)

@@ -43,8 +43,8 @@ rmdup_parser = subparsers.add_parser("rmdup",
 rmdup_parser.add_argument("fusion", metavar = "fusion.txt", default = None, type = str,
                     help = "the path to the fusion result")
 
-rmdup_parser.add_argument("type", choices=["fusionfusion", "genomonSV", "star_fusion", "genomon_fusion"], default = "fusionfusion",
-                    help = "the type of the fusion result")
+rmdup_parser.add_argument("type", choices=["fusionfusion", "genomonSV", "star_fusion", "genomon_fusion", "mapsplice2", "tophat_fusion"], 
+                    default = None, help = "the type of the fusion result")
 
 rmdup_parser.add_argument("output", metavar = "output.txt", default = None, type = str,
                     help = "the path to the output")
@@ -64,11 +64,15 @@ filt_parser = subparsers.add_parser("filt",
 filt_parser.add_argument("fusion", metavar = "fusion.txt", default = None, type = str,
                          help = "the path to the fusion result")
 
-filt_parser.add_argument("type", choices=["fusionfusion", "star_fusion", "genomon_fusion"], default = "fusionfusion",
-                         help = "the type of the fusion result")
+filt_parser.add_argument("type", choices=["fusionfusion", "star_fusion", "genomon_fusion", "mapsplice2", "tophat_fusion"], 
+                         default = None, help = "the type of the fusion result")
 
 filt_parser.add_argument("output", metavar = "output.txt", default = None, type = str,
                          help = "the path to the output")
+
+filt_parser.add_argument("db_dir", metavar = "db_dir", default = None, type = str,
+                         help = "the path to the database directory")
+
 
 filt_parser.add_argument("--thres", metavar = "threshould", default = 3, type = int,
                            help = "the threshould for the support read")
