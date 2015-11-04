@@ -21,18 +21,7 @@ def convert_to_bedpe(input_file, output_file, margin_major, margin_minor, method
         chr1 = chr1.replace("chr", "")
         chr2 = chr2.replace("chr", "")
        
-        if method == "fusionfusion":
-            read_num = F[7]
-        elif method == "genomonSV":
-            read_num = F[13]
-        elif method == "star_fusion":
-            read_num = F[1]
-        elif method == "genomon_fusion":
-            read_num = F[20]
-        elif method == "mapsplice2":
-            read_num = F[4]
-        elif method == "tophat_fusion":
-            read_num = F[6]
+        read_num = get_read_num(F, method)
 
         if dir1 == '+':
             start1 = str(int(start1) - int(margin_minor))
@@ -75,3 +64,21 @@ def get_position(F, method):
 
     return [chr1, pos1, dir1, chr2, pos2, dir2]
 
+
+def get_read_num(F, method):
+
+    read_num = 0
+    if method == "fusionfusion":
+        read_num = F[7]
+    elif method == "genomonSV":
+        read_num = F[13]
+    elif method == "star_fusion":
+        read_num = F[1]
+    elif method == "genomon_fusion":
+        read_num = F[20]
+    elif method == "mapsplice2":
+        read_num = F[4]
+    elif method == "tophat_fusion":
+        read_num = F[6]
+
+    return read_num
