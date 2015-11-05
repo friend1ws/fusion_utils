@@ -84,7 +84,7 @@ def get_read_num(F, method):
     elif method == "genomon_fusion":
         read_num = F[20]
     elif method == "mapsplice2":
-        read_num = F[4]
+        read_num = F[21]
     elif method == "tophat_fusion":
         read_num = F[6]
 
