@@ -6,13 +6,15 @@ ReReg = re.compile(r'([^ \t\n\r\f\v,]+):([\+\-])(\d+)\-([^ \t\n\r\f\v,]+):([\+\-
 
 def convert_to_bedpe(input_file, output_file, margin_major, margin_minor, method):
 
-    if method not in ["fusionfusion", "genomonSV", "star_fusion", "genomon_fusion", "mapsplice2", "tophat_fusion"]:
+    if method not in ["fusionfusion", "fusionfusion_part", "genomonSV", "star_fusion", "genomon_fusion", "mapsplice2", "tophat_fusion"]:
         raise ValueError("the argument method should be fusionfusion, genomonSV, star_fusion, genomon_fusion, mapsplice2, tophat_fusion")
 
     hIN = open(input_file, 'r')
     hOUT = open(output_file, 'w')
     for line in hIN:
         F = line.rstrip('\n').split('\t')
+
+        if F[0] == "#fusion_name" and method == "star_fusion": continue
 
         chr1, pos1, dir1, chr2, pos2, dir2 = get_position(F, method)
         start1, end1, start2, end2 = pos1, pos1, pos2, pos2
@@ -37,7 +39,7 @@ def convert_to_bedpe(input_file, output_file, margin_major, margin_minor, method
             start2 = str(int(start2) - int(margin_major))
             end2 = str(int(end2) + int(margin_minor))
 
-        print >> hOUT, '\t'.join([chr1, start1, end1, chr2, start2, end2, ID, read_num, dir1, dir2])
+        print >> hOUT, '\t'.join([chr1, start1, end1, chr2, start2, end2, ID, str(read_num), dir1, dir2])
 
     hIN.close()
     hOUT.close()
@@ -45,7 +47,7 @@ def convert_to_bedpe(input_file, output_file, margin_major, margin_minor, method
 
 def get_position(F, method):
 
-    if method in ["fusionfusion", "genomonSV", "tophat_fusion"]:
+    if method in ["fusionfusion", "fusionfusion_part", "genomonSV", "tophat_fusion"]:
         chr1, pos1, dir1, chr2, pos2, dir2 = F[0], F[1], F[2], F[3], F[4], F[5]
     elif method == "star_fusion":
         chr1, pos1, dir1 = F[4].split(':')
@@ -69,6 +71,11 @@ def get_read_num(F, method):
 
     read_num = 0
     if method == "fusionfusion":
+        star_read_num = int(F[11]) if F[11] != "---" else 0
+        ms2_read_num = int(F[12]) if F[12] != "---" else 0
+        th2_read_num = int(F[13]) if F[13] != "---" else 0
+        read_num = max(star_read_num, ms2_read_num, th2_read_num) 
+    elif method == "fusionfusion_part":
         read_num = F[7]
     elif method == "genomonSV":
         read_num = F[13]

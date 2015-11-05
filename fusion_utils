@@ -17,13 +17,13 @@ comp_parser = subparsers.add_parser("comp",
 comp_parser.add_argument("fusion1", metavar = "fusion1.txt", default = None, type = str,
                     help = "the path to the 1st fusion")
 
-comp_parser.add_argument("type1", choices=["fusionfusion", "genomonSV", "star_fusion", "genomon_fusion", "mapsplice2", "tophat_fusion"], 
+comp_parser.add_argument("type1", choices=["fusionfusion", "fusionfusion_part", "genomonSV", "star_fusion", "genomon_fusion", "mapsplice2", "tophat_fusion"], 
                     default = "fusionfusion", help = "the type of the 1st fusion")
 
 comp_parser.add_argument("fusion2", metavar = "fusion2.txt", default = None, type = str,
                     help = "the path to the 2nd fusion")
 
-comp_parser.add_argument("type2", choices=["fusionfusion", "genomonSV", "star_fusion", "genomon_fusion", "mapsplice2", "tophat_fusion"],
+comp_parser.add_argument("type2", choices=["fusionfusion", "fusionfusion_part", "genomonSV", "star_fusion", "genomon_fusion", "mapsplice2", "tophat_fusion"],
                     default = "fusionfusion", help = "the type of the 2nd fusion")
 
 comp_parser.add_argument("output", metavar = "output.txt", default = None, type = str,
@@ -43,7 +43,7 @@ rmdup_parser = subparsers.add_parser("rmdup",
 rmdup_parser.add_argument("fusion", metavar = "fusion.txt", default = None, type = str,
                     help = "the path to the fusion result")
 
-rmdup_parser.add_argument("type", choices=["fusionfusion", "genomonSV", "star_fusion", "genomon_fusion", "mapsplice2", "tophat_fusion"], 
+rmdup_parser.add_argument("type", choices=["fusionfusion", "fusionfusion_part", "genomonSV", "star_fusion", "genomon_fusion", "mapsplice2", "tophat_fusion"], 
                     default = None, help = "the type of the fusion result")
 
 rmdup_parser.add_argument("output", metavar = "output.txt", default = None, type = str,
@@ -64,7 +64,7 @@ filt_parser = subparsers.add_parser("filt",
 filt_parser.add_argument("fusion", metavar = "fusion.txt", default = None, type = str,
                          help = "the path to the fusion result")
 
-filt_parser.add_argument("type", choices=["fusionfusion", "star_fusion", "genomon_fusion", "mapsplice2", "tophat_fusion"], 
+filt_parser.add_argument("type", choices=["fusionfusion", "fusionfusion_part", "star_fusion", "genomon_fusion", "mapsplice2", "tophat_fusion"], 
                          default = None, help = "the type of the fusion result")
 
 filt_parser.add_argument("output", metavar = "output.txt", default = None, type = str,

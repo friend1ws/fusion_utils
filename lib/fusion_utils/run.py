@@ -13,10 +13,10 @@ def comp_main(args):
         hOUT.close()
         return
     
-    if args.type1 in ["fusionfusion", "star_fusion", "genomon_fusion", "mapsplice2", "tophat_fusion"] and args.type2 == "genomonSV":
+    if args.type1 in ["fusionfusion", "fusionfusion_part", "star_fusion", "genomon_fusion", "mapsplice2", "tophat_fusion"] and args.type2 == "genomonSV":
         process.convert_to_bedpe(args.fusion1, args.output + ".fusion1.bedpe", 500000, 10, args.type1)
         process.convert_to_bedpe(args.fusion2, args.output + ".fusion2.bedpe", 10, 10, "genomonSV")
-    elif args.type2 in ["fusionfusion", "star_fusion", "genomon_fusion", "mapsplice2", "tophat_fusion"] and args.type1 == "genomonSV":
+    elif args.type2 in ["fusionfusion", "fusionfusion_part", "star_fusion", "genomon_fusion", "mapsplice2", "tophat_fusion"] and args.type1 == "genomonSV":
         process.convert_to_bedpe(args.fusion1, args.output + ".fusion1.bedpe", 10, 10, "genomonSV")
         process.convert_to_bedpe(args.fusion2, args.output + ".fusion2.bedpe", 500000, 10, args.type2)
     else:
@@ -85,6 +85,10 @@ def rmdup_main(args):
     hOUT = open(args.output, 'w')
     for line in hIN:
         F = line.rstrip('\n').split('\t')
+
+        # header is removed
+        if F[0] == "#fusion_name" and args.type == "star_fusion": continue
+
         chr1, pos1, dir1, chr2, pos2, dir2 = process.get_position(F, args.type)
         ID = chr1 + ':' + dir1 + pos1 + '-' + chr2 + ':' + dir2 + pos2
 
