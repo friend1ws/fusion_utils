@@ -145,11 +145,19 @@ def filt_main(args):
         junction1 = annotation.get_junc_info(chr1_ucsc, pos1, ref_exon_tb, ens_exon_tb, 5)
         junction2 = annotation.get_junc_info(chr2_ucsc, pos2, ref_exon_tb, ens_exon_tb, 5)
 
+        same_gene_flag = 0
+        for g1 in gene1:
+            for g2 in gene2:
+                if g1 == g2: same_gene_flag = 1
+
+        if args.filter_same_gene and same_gene_flag == 1: continue
+
+
         junc_test = 0
         if (';'.join(junction1).find("start") != -1 and ';'.join(junction2).find("end") != -1) or (';'.join(junction1).find("end") != -1 and ';'.join(junction2).find("start") != -1):
             junc_test = 1
         
-        if junc_test == 0: continue
+        if args.filter_unspliced and junc_test == 0: continue
 
         print >> hOUT, '\t'.join(F)
 

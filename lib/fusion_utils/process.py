@@ -71,10 +71,11 @@ def get_read_num(F, method):
 
     read_num = 0
     if method == "fusionfusion":
-        star_read_num = int(F[11]) if F[11] != "---" else 0
-        ms2_read_num = int(F[12]) if F[12] != "---" else 0
-        th2_read_num = int(F[13]) if F[13] != "---" else 0
-        read_num = max(star_read_num, ms2_read_num, th2_read_num) 
+        read_num = 0
+        for i in range(11, len(F)):
+            if F[i] != "---" and int(F[i]) > read_num:
+                read_num = int(F[i])
+
     elif method == "fusionfusion_part":
         read_num = F[7]
     elif method == "genomonSV":
