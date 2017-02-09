@@ -4,7 +4,9 @@ import os, subprocess
 import process
 import pysam
 import filter
-import annotation
+from fusionfusion import annotationFunction as annotation
+import annot_utils.gene
+import annot_utils.exon
 
 def comp_main(args):
 
@@ -14,18 +16,18 @@ def comp_main(args):
         return
     
     if args.type1 in ["fusionfusion", "fusionfusion_part", "star_fusion", "genomon_fusion", "mapsplice2", "tophat_fusion"] and args.type2 == "genomonSV":
-        process.convert_to_bedpe(args.fusion1, args.output + ".fusion1.bedpe", 500000, 10, args.type1)
-        process.convert_to_bedpe(args.fusion2, args.output + ".fusion2.bedpe", 10, 10, "genomonSV")
+        process.convert_to_bedpe(args.fusion1, args.output + ".fusion1.bedpe", args.sv_margin_major, args.sv_margin_minor, args.type1)
+        process.convert_to_bedpe(args.fusion2, args.output + ".fusion2.bedpe", args.margin, args.margin, "genomonSV")
     elif args.type2 in ["fusionfusion", "fusionfusion_part", "star_fusion", "genomon_fusion", "mapsplice2", "tophat_fusion"] and args.type1 == "genomonSV":
-        process.convert_to_bedpe(args.fusion1, args.output + ".fusion1.bedpe", 10, 10, "genomonSV")
-        process.convert_to_bedpe(args.fusion2, args.output + ".fusion2.bedpe", 500000, 10, args.type2)
+        process.convert_to_bedpe(args.fusion1, args.output + ".fusion1.bedpe", args.margin, args.margin, "genomonSV")
+        process.convert_to_bedpe(args.fusion2, args.output + ".fusion2.bedpe", args.sv_margin_major, args.sv_margin_minor, args.type2)
     else:
-        process.convert_to_bedpe(args.fusion1, args.output + ".fusion1.bedpe", 10, 10, args.type1)
-        process.convert_to_bedpe(args.fusion2, args.output + ".fusion2.bedpe", 10, 10, args.type2)
+        process.convert_to_bedpe(args.fusion1, args.output + ".fusion1.bedpe", args.margin, args.margin, args.type1)
+        process.convert_to_bedpe(args.fusion2, args.output + ".fusion2.bedpe", args.margin, args.margin, args.type2)
 
 
     hOUT = open(args.output + ".fusion_comp.bedpe", 'w')
-    subprocess.call([args.bedtools_path + "/bedtools", "pairtopair", "-a", args.output + ".fusion1.bedpe", "-b", args.output + ".fusion2.bedpe"], stdout = hOUT)
+    subprocess.call(["bedtools", "pairtopair", "-a", args.output + ".fusion1.bedpe", "-b", args.output + ".fusion2.bedpe"], stdout = hOUT)
     hOUT.close()
 
     # create dictionary
@@ -67,7 +69,7 @@ def rmdup_main(args):
     process.convert_to_bedpe(args.fusion, args.output + ".fusion.bedpe", 10, 10, args.type)
 
     hOUT = open(args.output + ".fusion_comp.bedpe", 'w')
-    subprocess.call([args.bedtools_path + "/bedtools", "pairtopair", "-a", args.output + ".fusion.bedpe", "-b", args.output + ".fusion.bedpe"], stdout = hOUT)
+    subprocess.call(["bedtools", "pairtopair", "-a", args.output + ".fusion.bedpe", "-b", args.output + ".fusion.bedpe"], stdout = hOUT)
     hOUT.close()
 
     # create dictionary
@@ -107,6 +109,8 @@ def rmdup_main(args):
 
 def filt_main(args):
 
+
+    """
     annotation_dir = args.db_dir
     ref_gene_bed = annotation_dir + "/refGene.bed.gz"
     ref_exon_bed = annotation_dir + "/refExon.bed.gz"
@@ -125,6 +129,18 @@ def filt_main(args):
         for line in hin:
             F = line.rstrip('\n').split('\t')
             grch2ucsc[F[0]] = F[1]
+    """
+
+    annot_utils.gene.make_gene_info(args.output + ".tmp.refGene.bed.gz", "refseq", args.genome_id, args.grc, False)
+    annot_utils.gene.make_gene_info(args.output + ".tmp.ensGene.bed.gz", "gencode", args.genome_id, args.grc, False)
+    annot_utils.exon.make_exon_info(args.output + ".tmp.refExon.bed.gz", "refseq", args.genome_id, args.grc, False)
+    annot_utils.exon.make_exon_info(args.output + ".tmp.ensExon.bed.gz", "gencode", args.genome_id, args.grc, False)
+
+    ref_gene_tb = pysam.TabixFile(args.output + ".tmp.refGene.bed.gz")
+    ens_gene_tb = pysam.TabixFile(args.output + ".tmp.ensGene.bed.gz")
+    ref_exon_tb = pysam.TabixFile(args.output + ".tmp.refExon.bed.gz")
+    ens_exon_tb = pysam.TabixFile(args.output + ".tmp.ensExon.bed.gz")
+
 
     hIN = open(args.fusion, 'r')
     hOUT = open(args.output, 'w')
@@ -138,12 +154,12 @@ def filt_main(args):
         if chr1 in ["MT", "chrM", "hs37d5"] or chr2 in ["MT", "chrM", "hs37d5"]: continue
         if chr1.startswith("GL0") or chr2.startswith("GL0"): continue
 
-        chr1_ucsc = grch2ucsc[chr1] if chr1 in grch2ucsc else chr1 
-        chr2_ucsc = grch2ucsc[chr2] if chr2 in grch2ucsc else chr2
-        gene1 = annotation.get_gene_info(chr1_ucsc, pos1, ref_gene_tb, ens_gene_tb)
-        gene2 = annotation.get_gene_info(chr2_ucsc, pos2, ref_gene_tb, ens_gene_tb)
-        junction1 = annotation.get_junc_info(chr1_ucsc, pos1, ref_exon_tb, ens_exon_tb, 5)
-        junction2 = annotation.get_junc_info(chr2_ucsc, pos2, ref_exon_tb, ens_exon_tb, 5)
+        # chr1_ucsc = grch2ucsc[chr1] if chr1 in grch2ucsc else chr1 
+        # chr2_ucsc = grch2ucsc[chr2] if chr2 in grch2ucsc else chr2
+        gene1 = annotation.get_gene_info(chr1, pos1, ref_gene_tb, ens_gene_tb)
+        gene2 = annotation.get_gene_info(chr2, pos2, ref_gene_tb, ens_gene_tb)
+        junction1 = annotation.get_junc_info(chr1, pos1, ref_exon_tb, ens_exon_tb, 5)
+        junction2 = annotation.get_junc_info(chr2, pos2, ref_exon_tb, ens_exon_tb, 5)
 
         same_gene_flag = 0
         for g1 in gene1:
@@ -163,4 +179,16 @@ def filt_main(args):
 
     hIN.close()
     hOUT.close()
+
+    subprocess.call(["rm", "-rf", args.output + ".tmp.refGene.bed.gz"])
+    subprocess.call(["rm", "-rf", args.output + ".tmp.ensGene.bed.gz"])
+    subprocess.call(["rm", "-rf", args.output + ".tmp.refExon.bed.gz"])
+    subprocess.call(["rm", "-rf", args.output + ".tmp.ensExon.bed.gz"])
+    subprocess.call(["rm", "-rf", args.output + ".tmp.refGene.bed.gz.tbi"])
+    subprocess.call(["rm", "-rf", args.output + ".tmp.ensGene.bed.gz.tbi"])
+    subprocess.call(["rm", "-rf", args.output + ".tmp.refExon.bed.gz.tbi"])
+    subprocess.call(["rm", "-rf", args.output + ".tmp.ensExon.bed.gz.tbi"])
+
+
+
 
