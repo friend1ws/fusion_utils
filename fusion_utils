@@ -5,7 +5,7 @@ import argparse
 
 parser = argparse.ArgumentParser(prog = "fusion_utils")
 
-parser.add_argument("--version", action = "version", version = "fusion_utils-0.2.0rc1")
+parser.add_argument("--version", action = "version", version = "fusion_utils-0.2.0rc2")
 
 subparsers = parser.add_subparsers()
 

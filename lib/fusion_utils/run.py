@@ -27,7 +27,7 @@ def comp_main(args):
 
 
     hOUT = open(args.output + ".fusion_comp.bedpe", 'w')
-    subprocess.call(["bedtools", "pairtopair", "-a", args.output + ".fusion1.bedpe", "-b", args.output + ".fusion2.bedpe"], stdout = hOUT)
+    subprocess.check_call(["bedtools", "pairtopair", "-a", args.output + ".fusion1.bedpe", "-b", args.output + ".fusion2.bedpe"], stdout = hOUT)
     hOUT.close()
 
     # create dictionary
@@ -54,9 +54,9 @@ def comp_main(args):
     hOUT.close()
 
     # remove intermediate files
-    subprocess.call(["rm", "-rf", args.output + ".fusion1.bedpe"])
-    subprocess.call(["rm", "-rf", args.output + ".fusion2.bedpe"])
-    subprocess.call(["rm", "-rf", args.output + ".fusion_comp.bedpe"])
+    subprocess.check_call(["rm", "-rf", args.output + ".fusion1.bedpe"])
+    subprocess.check_call(["rm", "-rf", args.output + ".fusion2.bedpe"])
+    subprocess.check_call(["rm", "-rf", args.output + ".fusion_comp.bedpe"])
 
 
 def rmdup_main(args):
@@ -69,7 +69,7 @@ def rmdup_main(args):
     process.convert_to_bedpe(args.fusion, args.output + ".fusion.bedpe", 10, 10, args.type)
 
     hOUT = open(args.output + ".fusion_comp.bedpe", 'w')
-    subprocess.call(["bedtools", "pairtopair", "-a", args.output + ".fusion.bedpe", "-b", args.output + ".fusion.bedpe"], stdout = hOUT)
+    subprocess.check_call(["bedtools", "pairtopair", "-a", args.output + ".fusion.bedpe", "-b", args.output + ".fusion.bedpe"], stdout = hOUT)
     hOUT.close()
 
     # create dictionary
@@ -102,8 +102,8 @@ def rmdup_main(args):
     hOUT.close()
 
     # remove intermediate files
-    subprocess.call(["rm", "-rf", args.output + ".fusion.bedpe"])
-    subprocess.call(["rm", "-rf", args.output + ".fusion_comp.bedpe"])
+    subprocess.check_call(["rm", "-rf", args.output + ".fusion.bedpe"])
+    subprocess.check_call(["rm", "-rf", args.output + ".fusion_comp.bedpe"])
 
 
 
@@ -180,14 +180,14 @@ def filt_main(args):
     hIN.close()
     hOUT.close()
 
-    subprocess.call(["rm", "-rf", args.output + ".tmp.refGene.bed.gz"])
-    subprocess.call(["rm", "-rf", args.output + ".tmp.ensGene.bed.gz"])
-    subprocess.call(["rm", "-rf", args.output + ".tmp.refExon.bed.gz"])
-    subprocess.call(["rm", "-rf", args.output + ".tmp.ensExon.bed.gz"])
-    subprocess.call(["rm", "-rf", args.output + ".tmp.refGene.bed.gz.tbi"])
-    subprocess.call(["rm", "-rf", args.output + ".tmp.ensGene.bed.gz.tbi"])
-    subprocess.call(["rm", "-rf", args.output + ".tmp.refExon.bed.gz.tbi"])
-    subprocess.call(["rm", "-rf", args.output + ".tmp.ensExon.bed.gz.tbi"])
+    subprocess.check_call(["rm", "-rf", args.output + ".tmp.refGene.bed.gz"])
+    subprocess.check_call(["rm", "-rf", args.output + ".tmp.ensGene.bed.gz"])
+    subprocess.check_call(["rm", "-rf", args.output + ".tmp.refExon.bed.gz"])
+    subprocess.check_call(["rm", "-rf", args.output + ".tmp.ensExon.bed.gz"])
+    subprocess.check_call(["rm", "-rf", args.output + ".tmp.refGene.bed.gz.tbi"])
+    subprocess.check_call(["rm", "-rf", args.output + ".tmp.ensGene.bed.gz.tbi"])
+    subprocess.check_call(["rm", "-rf", args.output + ".tmp.refExon.bed.gz.tbi"])
+    subprocess.check_call(["rm", "-rf", args.output + ".tmp.ensExon.bed.gz.tbi"])
 
 
 
