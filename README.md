@@ -16,7 +16,7 @@ Python (>= 2.7), `pysam (>= 0.8.1)`,[`annot_utils`](https://github.com/friend1ws
 
 ## Install 
 ```
-git clone  https://github.com/friend1ws/fusion_util.git
+git clone https://github.com/friend1ws/fusion_utils.git
 cd fusion_utils
 python setup.py build install
 ```
