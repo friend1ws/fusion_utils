@@ -1,9 +1,8 @@
 #! /usr/bin/env python
 
 import os, subprocess
-import process
+from . import process
 import pysam
-import filter
 from fusionfusion import annotationFunction as annotation
 import annot_utils.gene
 import annot_utils.exon
