@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 
+from __future__ import print_function
 import os, subprocess
 from . import process
 import pysam
@@ -47,7 +48,7 @@ def comp_main(args):
         ID = chr1 + ':' + dir1 + pos1 + '-' + chr2 + ':' + dir2 + pos2
 
         SV_info = fusion_comp[ID] if ID in fusion_comp else "---"
-        print >> hOUT, '\t'.join(F) + '\t' + SV_info
+        print('\t'.join(F) + '\t' + SV_info, file=hOUT)
 
     hIN.close()
     hOUT.close()
@@ -94,7 +95,7 @@ def rmdup_main(args):
         ID = chr1 + ':' + dir1 + pos1 + '-' + chr2 + ':' + dir2 + pos2
 
         if ID not in fusion_comp:
-            print >> hOUT, '\t'.join(F)
+            print('\t'.join(F), file=hOUT)
 
 
     hIN.close()
@@ -174,7 +175,7 @@ def filt_main(args):
         
         if args.filter_unspliced and junc_test == 0: continue
 
-        print >> hOUT, '\t'.join(F)
+        print('\t'.join(F), file=hOUT)
 
     hIN.close()
     hOUT.close()
