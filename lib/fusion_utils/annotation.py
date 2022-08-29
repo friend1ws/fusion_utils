@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 
+# from __future__ import print_function
 import pysam
 
 junction_margin = 5
@@ -11,7 +12,7 @@ def get_gene_info(chr, pos, ref_gene_tb, ens_gene_tb):
     try:
         records = ref_gene_tb.fetch(chr, int(pos) - 1, int(pos) + 1)
     except Exception as inst:
-        # print >> sys.stderr, "%s: %s" % (type(inst), inst.args)
+        # print("%s: %s" % (type(inst), inst.args), file=sys.stderr)
         tabixErrorFlag = 1
         
     gene = [];
@@ -26,7 +27,7 @@ def get_gene_info(chr, pos, ref_gene_tb, ens_gene_tb):
         try:
             records = ens_gene_tb.fetch(chr, int(pos) - 1, int(pos) + 1)
         except Exception as inst:
-            # print >> sys.stderr, "%s: %s" % (type(inst), inst.args)
+            # print("%s: %s" % (type(inst), inst.args), file=sys.stderr)
             tabixErrorFlag = 1
             
         # for ensGene, just the longest gene is shown
@@ -52,7 +53,7 @@ def get_junc_info(chr, pos, ref_exon_tb, ens_exon_tb, junction_margin):
     try:
         records = ref_exon_tb.fetch(chr, int(pos) - junction_margin, int(pos) + junction_margin)
     except Exception as inst:
-        # print >> sys.stderr, "%s: %s" % (type(inst), inst.args)
+        # print("%s: %s" % (type(inst), inst.args), file=sys.stderr)
         tabixErrorFlag = 1
         
     junction = []
@@ -72,7 +73,7 @@ def get_junc_info(chr, pos, ref_exon_tb, ens_exon_tb, junction_margin):
         try:
             records = ens_exon_tb.fetch(chr, int(pos) - junction_margin, int(pos) + junction_margin)
         except Exception as inst:
-            # print >> sys.stderr, "%s: %s" % (type(inst), inst.args)
+            # print("%s: %s" % (type(inst), inst.args), file=sys.stderr)
             tabixErrorFlag = 1
              
         # for ensGene, just the longest gene is shown
